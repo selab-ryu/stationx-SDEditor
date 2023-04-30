@@ -1,0 +1,6 @@
+Bundle-Name: SDEditor
+Bundle-SymbolicName: com.sx.visualizers.sde
+Bundle-Version: 1.0.0
+Export-Package: com.sx.visualizers.sde.constants
+
+-metatype: *
