@@ -21,7 +21,6 @@
 <%@page import="com.liferay.portal.kernel.json.JSONObject"%>
 <%@page import="com.sx.icecap.constant.IcecapWebKeys"%>
 <%@page import="com.sx.icecap.model.DataType"%>
-<%@ include file="../init.jsp" %>
 
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/samples/crf-data-samples-fixed.js"></script>
 
@@ -70,51 +69,13 @@
 <aui:container cssClass="SXIcecap-web">
 	<aui:row cssClass="form-section">
 		<aui:col md="12" >
-			<aui:form action="<%= saveActionURL %>" enctype="multipart/form-data" method="POST" name="fm" inlineLabels="true" >
-				<aui:fieldset-group markupView="lexicon">
-					<aui:fieldset label="datatype">
-						<span style="display:table-cell; width:40%;">
-						<aui:input name="dataTypeName" label="datatype-name" disabled="true" value="<%= dataType.getDataTypeName() %>"></aui:input>
-						</span>
-						<span style="display:table-cell; width:10%;">
-						<aui:input name="dataTypeVersion" label="datatype-version" disabled="true" value="<%= dataType.getDataTypeVersion() %>"></aui:input>
-						</span>
-						<span style="display:table-cell; width:10%;">
-						<aui:input name="dataTypeExtension" label="datatype-extention" disabled="true" value="<%= dataType.getExtension() %>"></aui:input>
-						</span>
-					</aui:fieldset>
-				</aui:fieldset-group>
-				<div>
-					<span><%= dataType.getTooltip(locale) %></span>
-				</div>
-				<hr class=""></hr>
-				
-				<input type="hidden" id="<portlet:namespace/>hasFile" name="<portlet:namespace/>hasFile"/>
-				<input type="hidden" id="<portlet:namespace/>uploadParams" name="<portlet:namespace/>uploadParams"/>
-				<input type="hidden" id="<portlet:namespace/>structuredData" name="<portlet:namespace/>structuredData"/>
-				<div class="container-fluid">
-					<div class="row">
-						<div class="col-md-12"  id="<portlet:namespace/>canvasPanel"></div>
-					</div>
-				</div>
-				<aui:button-row>
-					<c:choose>
-						<c:when test="<%= cmd.equalsIgnoreCase(StationXConstants.CMD_ADD) %>">
-							<aui:button type="submit" name="add"></aui:button>
-						</c:when>
-						<c:otherwise>
-							<aui:button type="submit" name="update"></aui:button>
-						</c:otherwise>
-					</c:choose>
-					<aui:button name="addSamples" value="add-samples"></aui:button>
-					<aui:button name="delete" value="delete"></aui:button>
-				</aui:button-row>
-			</aui:form>
+			
 		</aui:col>
 	</aui:row>
 </aui:container>
 
 <script>
+
 $(document).ready(function(){
 	let SX = StationX(  '<portlet:namespace/>', 
 			'<%= defaultLocale.toString() %>',

@@ -44,7 +44,7 @@ import org.osgi.service.component.annotations.Reference;
 			"com.liferay.portlet.display-category=category.station-x-visualizers",
 			"com.liferay.portlet.header-portlet-css=/css/main.css",
 			"com.liferay.portlet.instanceable=true",
-			"javax.portlet.display-name=StructuredDataEditor",
+			"javax.portlet.display-name=Structured Data Editor",
 			"javax.portlet.init-param.template-path=/",
 			"javax.portlet.init-param.view-template=/html/visualizer-wrapper.jsp",
 			"javax.portlet.init-param.config-template=/html/configuration.jsp",
@@ -65,40 +65,41 @@ public class StructuredDataEditorPortlet extends MVCPortlet {
 		
 Debug.printHeader("StructuredDataEditorPortlet");
 		
-		long dataTypeId = ParamUtil.getLong(renderRequest, StationXWebKeys.DATATYPE_ID, 0);
-		long structuredDataId = ParamUtil.getLong(renderRequest, IcecapWebKeys.STRUCTURED_DATA_ID, 0);
+		String strDataPacket = ParamUtil.getString(renderRequest, "dataPacket", "");
+
+		System.out.println("visualizer controller dataPacket: " + strDataPacket );
 		
-		String dataStructure = ParamUtil.getString(renderRequest, "dataStructure", "" );
-		String structuredData = ParamUtil.getString( renderRequest, "structuredData", "");
+		if( !strDataPacket.isEmpty() ) {
+			JSONObject dataPacket = null;
+			try {
+				dataPacket = JSONFactoryUtil.createJSONObject(strDataPacket);
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+			
+			String payloadType = dataPacket.getString("payloadType");
+			
+			if( payloadType.equalsIgnoreCase("DATA_STRUCTURE") ) {
+				renderRequest.setAttribute(StationXWebKeys.DATA_PACKET, dataPacket);
+			}
+		}
 		
-		JSONObject jsonDataStructure = null;
-		
+		/*
 		try {
-			if( !dataStructure.isEmpty() ) {
-				jsonDataStructure = JSONFactoryUtil.createJSONObject( dataStructure );
-				renderRequest.setAttribute(StationXWebKeys.CMD, StationXConstants.CMD_ADD);
-			}
-			else if( !structuredData.isEmpty() && dataTypeId > 0 ) {
-				jsonDataStructure = _dataTypeLocalService.getStructuredDataWithValues(dataTypeId, structuredData);
-				renderRequest.setAttribute(StationXWebKeys.CMD, StationXConstants.CMD_UPDATE);
-			}
-			else if( structuredDataId > 0 && dataTypeId > 0 ){
+			if( dataTypeId > 0 && structuredDataId > 0 ) {
 				jsonDataStructure = _dataTypeLocalService.getStructuredDataWithValues(dataTypeId, structuredDataId);
 				renderRequest.setAttribute(StationXWebKeys.CMD, StationXConstants.CMD_UPDATE);
 			}
-			else if( dataTypeId > 0 ){
+			else if( dataTypeId > 0 && structuredDataId == 0 ) {
 				jsonDataStructure = _dataTypeLocalService.getDataTypeStructureJSONObject(dataTypeId);
-				renderRequest.setAttribute( StationXWebKeys.CMD, StationXConstants.CMD_ADD );
-			}
-			else {
-				throw new PortletException( "A Data type ID is required to run Structured Data Editor" );
+				renderRequest.setAttribute(StationXWebKeys.CMD, StationXConstants.CMD_ADD);
 			}
 		} catch( JSONException e ) {
 			throw new PortletException( e.getMessage() );
 		}
 
 		renderRequest.setAttribute(IcecapWebKeys.STRUCTURED_DATA_JSON_OBJECT, jsonDataStructure);
-		
+		*/
 		super.doView(renderRequest, renderResponse);
 	}
 
