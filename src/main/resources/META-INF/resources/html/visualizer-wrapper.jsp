@@ -14,6 +14,8 @@
 <%@page import="java.util.Locale"%>
 <%@ include file="init.jsp" %>
 
+<link rel="stylesheet" href="<%= request.getContextPath()%>/css/main.css">
+
 <%
 	VisualizerConfig visualizerConfig = VisualizerUtil.getVisualizerConfig(renderRequest, portletDisplay, user);
 
@@ -80,6 +82,17 @@
 		<aui:col md="12">
 			<div id="<portlet:namespace/>canvas" style="<%=visualizerConfig.getDisplayStyle() %>">
 				<div class="container-fluid">
+					<div class="row" id="<portlet:namespace/>goToBar" style="display:none;" >
+						<div class="col-md-6">
+							<aui:select name="goToCategory" label="go-to-category" inlineLabel="left" inlineField="true">
+								<aui:option label="term-name" value="termName"></aui:option>
+								<aui:option label="display-name" value="displayName"></aui:option>
+							</aui:select>
+						</div>
+						<div class="col-md-6" class="ui-widget">
+							<aui:input name="goToSelector" label="go-to" inlineLabel="left" inlineField="true"></aui:input>
+						</div>
+					</div>
 					<div class="row">
 						<div class="col-md-12"  id="<portlet:namespace/>canvasPanel"></div>
 					</div>
