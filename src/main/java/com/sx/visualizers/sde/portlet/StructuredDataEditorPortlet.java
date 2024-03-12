@@ -50,7 +50,7 @@ import org.osgi.service.component.annotations.Reference;
 			"javax.portlet.init-param.config-template=/html/configuration.jsp",
 			"javax.portlet.name=" + StructuredDataEditorPortletKeys.STRUCTURED_DATA_EDITOR,
 			"javax.portlet.resource-bundle=content.Language",
-			"javax.portlet.security-role-ref=power-user,user"
+			"javax.portlet.security-role-ref=power-user,user,guest"
 		},
 		service = Portlet.class
 )
@@ -70,17 +70,11 @@ Debug.printHeader("StructuredDataEditorPortlet");
 		System.out.println("visualizer controller dataPacket: " + strDataPacket );
 		
 		if( !strDataPacket.isEmpty() ) {
-			JSONObject dataPacket = null;
 			try {
-				dataPacket = JSONFactoryUtil.createJSONObject(strDataPacket);
+				JSONObject dataPacket = JSONFactoryUtil.createJSONObject(strDataPacket);
+				renderRequest.setAttribute(StationXWebKeys.DATA_PACKET, dataPacket);
 			} catch (JSONException e) {
 				e.printStackTrace();
-			}
-			
-			String payloadType = dataPacket.getString("payloadType");
-			
-			if( payloadType.equalsIgnoreCase("DATA_STRUCTURE") ) {
-				renderRequest.setAttribute(StationXWebKeys.DATA_PACKET, dataPacket);
 			}
 		}
 		

@@ -31,11 +31,11 @@
 	
 	String cmd = ParamUtil.getString(renderRequest, StationXWebKeys.CMD, StationXConstants.CMD_ADD);
 
-	String strDataPacket = ParamUtil.getString(renderRequest, StationXWebKeys.DATA_PACKET, ""); 
-	System.out.println("visualizer dataPacket: " + strDataPacket );
+	String strDataPacket = ParamUtil.getString(renderRequest, StationXWebKeys.DATA_PACKET, "");
+	boolean hasDataPacket = !strDataPacket.isEmpty();
 	
-	boolean initialized = !strDataPacket.isEmpty();
-	
+	boolean initialized = Validator.isNotNull(employer) && !employer.isEmpty();
+
 	if( initialized ){
 		System.out.println( "Data initalized...");
 	}
@@ -213,14 +213,16 @@ $(document).ready(function(){
 	 console.log( 'Visualizer: ', visualizer);
 	 
 	 let jsonDataStructure;
-	 if( <%= initialized %> ){
-		 let dataPacket = '<%= strDataPacket %>';
-		 dataPacket = JSON.parse( dataPacket );
-		 jsonDataStructure = dataPacket.content;
-		 console.log('initDataPacket: ', jsonDataStructure);
+	 
+	 if( JSON.parse('<%= hasDataPacket %>') ){
+		 let dataPacket = JSON.parse('<%= strDataPacket %>');
+		 if( dataPacket.payloadType === SX.Constants.PayloadType.DATA_STRUCTURE ){
+			 jsonDataStructure = dataPacket.payload;
+			 console.log('initDataPacket: ', jsonDataStructure);
+		 }
 	 }
 	 
- 	let dataStructure = <%= initialized %> ? 
+ 	let dataStructure = jsonDataStructure ? 
  					SX.newDataStructure(
  							jsonDataStructure,
  							{ resourceCommandURL: visualizer.resourceURL },
@@ -231,9 +233,11 @@ $(document).ready(function(){
  	console.log('dataStructure: ', dataStructure );
  	
 
-	if( <%= initialized %> ){
-		visualizer.loadCanvas( dataStructure );
+	if( JSON.parse('<%= initialized %>') ){
 		visualizer.fireVisualizerReadyEvent(  true );
+		if( dataStructure ){
+			visualizer.loadCanvas( dataStructure );
+		}
 	}
 	else{
 		visualizer.fireVisualizerWaitingEvent( false );
