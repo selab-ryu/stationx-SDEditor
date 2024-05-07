@@ -34,19 +34,19 @@
 	String strDataPacket = ParamUtil.getString(renderRequest, StationXWebKeys.DATA_PACKET, "");
 	boolean hasDataPacket = !strDataPacket.isEmpty();
 	
-	boolean initialized = Validator.isNotNull(employer) && !employer.isEmpty();
+	boolean employed = Validator.isNotNull(employer) && !employer.isEmpty();
 
-	if( initialized ){
-		System.out.println( "Data initalized...");
+	if( employed ){
+		System.out.println( "Visualizer is employed by " + employer);
 	}
 	else{
-		System.out.println( "Data did not initalized...");
+		System.out.println( "Visualizer is not employed...");
 	}
 %>
 
 <portlet:resourceURL id="<%= SDEMVCCommands.RESOURSE_COMMAND %>" var="serveResourceURL"></portlet:resourceURL>
 
-<aui:container cssClass="SDEditor">
+<aui:container cssClass="station-x">
 	<aui:row>
 		<aui:col md="6">
 			<div id="<portlet:namespace/>title" style="display:flex;align-items:self-end;overflow:hide;height:100%;font-size:0.9rem;font-weight:600;"></div>
@@ -114,11 +114,13 @@ $(document).ready(function(){
 		 ***********************************************************************/
 		let loadData = function( dataStructure ){
 		 	console.log('dataStructure: ', dataStructure);
-		 	if( dataStructure.structuredDataId )
-			$('#<portlet:namespace/>canvasPanel').empty();
-			$('#<portlet:namespace/>title').text(dataStructure.title);
+		 	if( dataStructure.structuredDataId ){
+		 		
+				$('#<portlet:namespace/>canvasPanel').empty();
+				$('#<portlet:namespace/>title').text(dataStructure.title);
+		 	}
 			dataStructure.render();
-			visualizer.fireVisualizerDataLoadedEvent();
+			//visualizer.fireVisualizerDataLoadedEvent();
 		};
 		
 	/***********************************************************************
@@ -132,14 +134,22 @@ $(document).ready(function(){
 	}
 
 	let loadDataEventHandler = function( dataPacket ){
+		console.log('loadDataEventHandler: ', dataPacket);
 		if( dataPacket.payloadType === SX.Constants.PayloadType.DATA_STRUCTURE){
 			let profile = dataPacket.profile ? dataPacket.profile : new Object(); 
 			profile.resourceCommandURL = visualizer.resourceURL;
 			dataStructure  = SX.newDataStructure(
-					dataPacket.payload, 
+					dataPacket.dataStructure, 
 					profile,
 					SX.Constants.FOR_EDITOR, 
 					$('#<portlet:namespace/>canvasPanel') );
+			
+			let structuredData = dataPacket.structuredData;
+			
+			if( structuredData ){
+				dataStructure.loadData( structuredData, 'JSON' );
+			}
+			console.log( 'Editor structuredData: ', structuredData, dataStructure );
 		}
 
 		visualizer.loadCanvas( dataStructure );
@@ -233,11 +243,11 @@ $(document).ready(function(){
  	console.log('dataStructure: ', dataStructure );
  	
 
-	if( JSON.parse('<%= initialized %>') ){
-		visualizer.fireVisualizerReadyEvent(  true );
+	if( JSON.parse('<%= employed %>') ){
 		if( dataStructure ){
 			visualizer.loadCanvas( dataStructure );
 		}
+		visualizer.fireVisualizerReadyEvent(  true );
 	}
 	else{
 		visualizer.fireVisualizerWaitingEvent( false );
