@@ -143,7 +143,7 @@ $(document).ready(function(){
 					profile,
 					SX.Constants.FOR_EDITOR, 
 					$('#<portlet:namespace/>canvasPanel') );
-			
+	
 			let structuredData = dataPacket.structuredData;
 			
 			if( structuredData ){
