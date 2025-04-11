@@ -120,6 +120,7 @@ $(document).ready(function(){
 				$('#<portlet:namespace/>title').text(dataStructure.title);
 		 	}
 			dataStructure.render();
+			dataStructure.fireStructuredDataChangedEvent();
 			//visualizer.fireVisualizerDataLoadedEvent();
 		};
 		
