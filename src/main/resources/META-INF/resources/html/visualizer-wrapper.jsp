@@ -113,14 +113,14 @@ $(document).ready(function(){
 		 * Draw Function on Canvas
 		 ***********************************************************************/
 		let loadData = function( dataStructure ){
-		 	console.log('dataStructure: ', dataStructure);
+		 	//console.log('dataStructure: ', dataStructure);
 		 	if( dataStructure.structuredDataId ){
 		 		
 				$('#<portlet:namespace/>canvasPanel').empty();
 				$('#<portlet:namespace/>title').text(dataStructure.title);
 		 	}
 			dataStructure.render();
-			dataStructure.fireStructuredDataChangedEvent();
+			//dataStructure.fireStructuredDataChangedEvent();
 			//visualizer.fireVisualizerDataLoadedEvent();
 		};
 		
@@ -130,12 +130,12 @@ $(document).ready(function(){
 	 let handshakeEventHandler = function( dataPacket ){
  		visualizer.employer = dataPacket.sourcePortlet;
 		
- 		console.log( 'handshake: ', visualizer );
+ 		//console.log( 'handshake: ', visualizer );
 		visualizer.fireVisualizerReadyEvent( true );
 	}
 
 	let loadDataEventHandler = function( dataPacket ){
-		console.log('loadDataEventHandler: ', dataPacket);
+		//console.log('loadDataEventHandler: ', dataPacket);
 		if( dataPacket.payloadType === SX.Constants.PayloadType.DATA_STRUCTURE){
 			let profile = dataPacket.profile ? dataPacket.profile : new Object(); 
 			profile.resourceCommandURL = visualizer.resourceURL;
@@ -150,14 +150,14 @@ $(document).ready(function(){
 			if( structuredData ){
 				dataStructure.loadData( structuredData, 'JSON' );
 			}
-			console.log( 'Editor structuredData: ', structuredData, dataStructure );
+			//console.log( 'Editor structuredData: ', structuredData, dataStructure );
 		}
 
 		visualizer.loadCanvas( dataStructure );
 	};
 	
 	let structuredDataChangedEventHandler = function( dataPacket ){
-		console.log('structuredDataChangedEventHandler: ', dataPacket );
+		//console.log('structuredDataChangedEventHandler: ', dataPacket );
 		
 		visualizer.fireVisualizerDataChangedEvent( dataPacket.payloadType, dataPacket.payload );
 	}
@@ -171,7 +171,7 @@ $(document).ready(function(){
 	};
 	
 	let responseDataEventHandler = function( data, params ){
-		console.log('[responseDataEventHandler]', data, params);
+		//console.log('[responseDataEventHandler]', data, params);
 		
 		switch( callbackParams.procFunc ){
 		case 'readServerFile':
@@ -181,7 +181,7 @@ $(document).ready(function(){
 	};
 	
 	let initializeEventHandler = function( data, params ){
-		console.log('[initializeEventHandler] ');
+		//console.log('[initializeEventHandler] ');
 		
 		var initData = JSON.parse('<%=visualizerConfig.initData%>');
 		initData.dataType_ = {
@@ -221,7 +221,7 @@ $(document).ready(function(){
 	 
 	 
 	 let visualizer = SX.createVisualizer(config);
-	 console.log( 'Visualizer: ', visualizer);
+	 //console.log( 'Visualizer: ', visualizer);
 	 
 	 let jsonDataStructure;
 	 
@@ -229,7 +229,7 @@ $(document).ready(function(){
 		 let dataPacket = JSON.parse('<%= strDataPacket %>');
 		 if( dataPacket.payloadType === SX.Constants.PayloadType.DATA_STRUCTURE ){
 			 jsonDataStructure = dataPacket.payload;
-			 console.log('initDataPacket: ', jsonDataStructure);
+			 //console.log('initDataPacket: ', jsonDataStructure);
 		 }
 	 }
 	 
@@ -241,7 +241,7 @@ $(document).ready(function(){
 							$('#<portlet:namespace/>canvasPanel')) 
 					: undefined;
 
- 	console.log('dataStructure: ', dataStructure );
+ 	//console.log('dataStructure: ', dataStructure );
  	
 
 	if( JSON.parse('<%= employed %>') ){
